@@ -1,0 +1,2 @@
+psql $GREENLIGHT_DB_DSN
+
