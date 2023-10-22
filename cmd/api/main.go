@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"expvar"
 	"flag"
+	"fmt"
 	_ "github.com/lib/pq"
 	"github.com/sensor-projekt/greenlight/internal/data"
 	"github.com/sensor-projekt/greenlight/internal/jsonlog"
@@ -16,7 +17,11 @@ import (
 	"time"
 )
 
-const version = "1.0.0"
+// Remove the hardcoded version number and make version a variable instead of a constant.
+var (
+	buildTime string
+	version   string
+)
 
 // Update the config struct to hold the SMTP server settings.
 type config struct {
@@ -96,7 +101,17 @@ func main() {
 		return nil
 	})
 
+	// Create a new version boolean flag with the default value of false.
+	displayVersion := flag.Bool("version", false, "Display version and exit")
+
 	flag.Parse()
+
+	if *displayVersion {
+		fmt.Printf("Version:\t%s\n", version)
+		// Print out the contents of the buildTime variable.
+		fmt.Printf("Build time:\t%s\n", buildTime)
+		os.Exit(0)
+	}
 
 	logger := jsonlog.New(os.Stdout, jsonlog.LevelInfo)
 
